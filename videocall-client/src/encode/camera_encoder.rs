@@ -119,7 +119,13 @@ impl CameraEncoder {
             Box::new(move |chunk: JsValue| {
                 let chunk = web_sys::EncodedVideoChunk::from(chunk);
                 // This says 0.0 when I tested it but must be where the data is so can be siphoned off and saved, hopefully before compression
-                info!("received chunk of duration {:?}", chunk.duration());
+                chunk.copy_to_with_u8_array(&mut buffer);
+                info!(
+                    "received chunk of duration: {:?}, size: {:?}, content: {:?}",
+                    chunk.duration(),
+                    chunk.byte_length(),
+                    buffer
+                );
                 let packet: PacketWrapper = transform_video_chunk(
                     chunk,
                     sequence_number,

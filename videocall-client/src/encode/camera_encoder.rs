@@ -121,18 +121,13 @@ impl CameraEncoder {
                 // This says 0.0 when I tested it but must be where the data is so can be siphoned off and saved, hopefully before compression
                 chunk.copy_to_with_u8_array(&mut buffer);
                 info!(
-                    "received chunk of duration: {:?}, size: {:?}, content: {:?}",
+                    "received chunk | duration: {:?}, size: {:?}, content: {:?}",
                     chunk.duration(),
                     chunk.byte_length(),
-                    buffer
+                    &buffer[1..100]
                 );
-                let packet: PacketWrapper = transform_video_chunk(
-                    chunk,
-                    sequence_number,
-                    &mut buffer,
-                    &userid,
-                    aes.clone(),
-                );
+                let packet: PacketWrapper =
+                    transform_video_chunk(chunk, sequence_number, &buffer, &userid, aes.clone());
                 client.send_packet(packet);
                 sequence_number += 1;
             })

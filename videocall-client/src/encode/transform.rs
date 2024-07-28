@@ -11,12 +11,12 @@ use web_sys::{EncodedAudioChunk, EncodedVideoChunk};
 pub fn transform_video_chunk(
     chunk: EncodedVideoChunk,
     sequence: u64,
-    buffer: &mut [u8],
+    buffer: &[u8],
     email: &str,
     aes: Rc<Aes128State>,
 ) -> PacketWrapper {
     let byte_length = chunk.byte_length() as usize;
-    chunk.copy_to_with_u8_array(buffer);
+    // chunk.copy_to_with_u8_array(buffer);
     let mut media_packet: MediaPacket = MediaPacket {
         data: buffer[0..byte_length].to_vec(),
         frame_type: EncodedVideoChunkTypeWrapper(chunk.type_()).to_string(),
